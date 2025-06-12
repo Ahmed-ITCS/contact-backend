@@ -1,14 +1,24 @@
 import nodemailer from 'nodemailer';
 
 export default async function handler(req, res) {
+  // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
+  // Handle preflight OPTIONS request
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  // Only allow POST method
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
   const { name, email, phone, subject, message } = req.body;
 
+  // Configure nodemailer transporter
   const transporter = nodemailer.createTransport({
     host: 'mail.privateemail.com',
     port: 587,
@@ -20,6 +30,7 @@ export default async function handler(req, res) {
   });
 
   try {
+    // Send email
     await transporter.sendMail({
       from: `"${name}" <${process.env.NAMECHEAP_EMAIL}>`,
       to: 'info@highstreetaccountax.com',
@@ -32,9 +43,9 @@ export default async function handler(req, res) {
              <p><strong>Message:</strong> ${message}</p>`,
     });
 
-    res.status(200).json({ success: true });
+    return res.status(200).json({ success: true });
   } catch (error) {
     console.error('Email sending error:', error);
-    res.status(500).json({ message: 'Error sending email' });
+    return res.status(500).json({ message: 'Error sending email' });
   }
 }
