@@ -4,6 +4,8 @@
   "type": "module",
   "scripts": {},
   "dependencies": {
-    "nodemailer": "^7.0.3"
+    "@emailjs/browser": "^4.4.1",
+    "nodemailer": "^7.0.3",
+    "vercel": "^43.0.0"
   }
 }
