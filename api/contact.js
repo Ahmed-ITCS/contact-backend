@@ -1,24 +1,23 @@
 import nodemailer from 'nodemailer';
 
 export default async function handler(req, res) {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  // Handle preflight OPTIONS request
+  // Handle CORS
   if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     return res.status(200).end();
   }
 
-  // Only allow POST method
+  // Set CORS for all other requests
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
   const { name, email, phone, subject, message } = req.body;
 
-  // Configure nodemailer transporter
   const transporter = nodemailer.createTransport({
     host: 'mail.privateemail.com',
     port: 587,
@@ -30,7 +29,6 @@ export default async function handler(req, res) {
   });
 
   try {
-    // Send email
     await transporter.sendMail({
       from: `"${name}" <${process.env.NAMECHEAP_EMAIL}>`,
       to: 'info@highstreetaccountax.com',
