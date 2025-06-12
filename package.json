@@ -4,7 +4,6 @@
   "type": "module",
   "scripts": {},
   "dependencies": {
-    "nodemailer": "^7.0.3",
-    "vercel": "^43.0.0"
+    "nodemailer": "^7.0.3"
   }
 }
